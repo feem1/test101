@@ -11,7 +11,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include "dictionary.h"
+#define SIZE 27
+#define LENGTH 26
 int hash(const char *word);
 char word[LENGTH + 1];
 int cnt = 0;
@@ -47,7 +50,6 @@ bool check(const char *word)
 bool load(const char *dictionary)
 {
     FILE *fp = NULL;
-    int h;
 	for (int i=0;i<SIZE ;i++ )
 	{
 		hashs[i]=NULL;
@@ -56,9 +58,8 @@ bool load(const char *dictionary)
     {
         return false;
     }
-  
-
-    while (fscanf(fp,"%s\n",word)!= EOF)
+	int h=0;
+	while (fscanf(fp,"%s\n",word)!= EOF)
     {
         node *push =malloc(sizeof(node));
         push->word =malloc(strlen(word) +1);
@@ -90,20 +91,22 @@ unsigned int size(void)
 //unloads the dictionary
 bool unload(void)
 {
-    node *nextnode,*nodei;
-    for (int i=0;i<SIZE;i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        nodep =hashs[i];
-        while (nodei)
+        node *nodep;
+        nodep = hashs[i];
+
+        while (nodep)
         {
-	        free(nodei->word);
-	        nextn = nodei->next;
-	        free(nodei);
-	        nodei = nextnode;
-        }   
+            node* nodetmp = nodep;
+            nodep = nodep->next;
+            free(nodetmp);
+            return true;
+        }
         hashs[i] = NULL;
     }
-  return true;
+
+    return false;
 }
 
 
